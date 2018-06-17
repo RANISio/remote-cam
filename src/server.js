@@ -31,7 +31,7 @@ export default express()
   .use(bodyParser.urlencoded({ extended: true }))
   .use(sessionParser)
   .post('/', api)
-  .get('/*', (request, response) => {
+  .get('/', (request, response) => {
     const sheet = new ServerStyleSheet(),
       html = renderToString(sheet.collectStyles(<Application />)),
       css = sheet.getStyleTags();
