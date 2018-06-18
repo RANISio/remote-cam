@@ -32,9 +32,8 @@ export default express()
   .use(sessionParser)
   .post('/', api)
   .get('/', (request, response) => {
-    const sheet = new ServerStyleSheet(),
-      html = renderToString(sheet.collectStyles(<Application />)),
-      css = sheet.getStyleTags();
+    const sheet = new ServerStyleSheet();
+    const css = sheet.getStyleTags();
 
     response.send(
       minify(
@@ -57,14 +56,12 @@ export default express()
             : '') +
           css +
           `
-					<script defer src="` +
+					<script defer type="application/javascript" src="` +
           clientJs +
           `"></script>
 				</head>
 				<body>
-					<div id="root">` +
-          html +
-          `</div>
+					<div id="root"></div>
 				</body>
 			</html>`,
         {
