@@ -21,7 +21,7 @@ if (process.env.NODE_ENV == 'production') {
 export default express()
   .disable('x-powered-by')
   .use(compression())
-  .use(express.static(process.env.RAZZLE_PUBLIC_DIR))
+  .use(express.static('public'))
   .use(bodyParser.json())
   .use(bodyParser.urlencoded({ extended: true }))
   .use(sessionParser)
