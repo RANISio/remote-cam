@@ -7,7 +7,7 @@ ws(mainServer);
 
 let currentApp = server;
 
-mainServer.listen(process.env.PORT, error => {
+mainServer.listen(process.env.PORT, 'localhost', error => {
   if (error) {
     console.log(error);
   }

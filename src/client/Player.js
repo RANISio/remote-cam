@@ -5,7 +5,6 @@ import { VIEWS } from './constants';
 injectGlobal`
   video {
     height: 100%;
-    cursor: pointer;
     position: relative;
   }
   video::-webkit-media-controls-panel {
@@ -201,16 +200,6 @@ class Player extends Component {
   getWsUrl = () => {
     var l = window.location;
     return (l.protocol === 'https:' ? 'wss://' : 'ws://') + l.host + l.pathname;
-  };
-
-  toggleFullScreen = () => {
-    if (!document.webkitFullscreenElement) {
-      this.player.webkitRequestFullscreen();
-    } else {
-      if (document.webkitExitFullscreen) {
-        document.webkitExitFullscreen();
-      }
-    }
   };
 
   render = () => (

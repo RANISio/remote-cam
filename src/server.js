@@ -4,12 +4,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import { sessionParser } from './server/constants';
 import api from './server/api';
-
-import React from 'react';
-import { renderToString } from 'react-dom/server';
 import { ServerStyleSheet } from 'styled-components';
-
-import Application from './client/Main';
 
 const assets = require(process.env.RAZZLE_ASSETS_MANIFEST);
 
