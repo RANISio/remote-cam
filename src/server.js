@@ -2,7 +2,6 @@ import compression from 'compression';
 import { minify } from 'html-minifier';
 import express from 'express';
 import bodyParser from 'body-parser';
-import { sessionParser } from './server/constants';
 import api from './server/api';
 import { ServerStyleSheet } from 'styled-components';
 
@@ -16,15 +15,14 @@ if (process.env.NODE_ENV == 'production') {
   if (clientCss) clientCss = clientCss.replace('/', '');
 
   clientJs = clientJs.replace('/', '');
-}
+} 
 
 export default express()
   .disable('x-powered-by')
   .use(compression())
-  .use(express.static('public'))
+  .use(express.static(process.env.RAZZLE_PUBLIC_DIR))
   .use(bodyParser.json())
   .use(bodyParser.urlencoded({ extended: true }))
-  .use(sessionParser)
   .post('/', api)
   .get('/', (request, response) => {
     const sheet = new ServerStyleSheet();
@@ -51,9 +49,7 @@ export default express()
             : '') +
           css +
           `
-					<script defer type="application/javascript" src="` +
-          clientJs +
-          `"></script>
+					<script defer type="application/javascript" src="${clientJs}"></script>
 				</head>
 				<body>
 					<div id="root"></div>

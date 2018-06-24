@@ -1,6 +1,6 @@
 import WebSocket from 'ws';
-import { rooms, sessionParser } from './constants';
-import { log } from './utils';
+import { rooms } from './constants';
+import url from 'url';
 
 export default server => {
   const wss = new WebSocket.Server({
@@ -13,8 +13,6 @@ export default server => {
   }
 
   wss.on('connection', function(ws, req) {
-    log('New client connected.');
-
     ws.isAlive = true;
     ws.on('pong', heartbeat);
 
@@ -30,22 +28,21 @@ export default server => {
       });
     }, 30000);
 
-    sessionParser(req, {}, () => {
-      let room = (ws.room = req.session.room);
-      ws.role = req.session.role;
-      if (!rooms[room]) rooms[room] = [];
-      rooms[room].push(ws);
-    });
+    let {room, role} = url.parse(req.url, true).query;
+    ws.room = room;
+    ws.role = role;
+    if (!rooms[room]) rooms[room] = [];
+    rooms[room].push(ws);
 
     ws.on('message', function(message) {
-      log('Received Message from ' + ws.id + ':' + message.type);
       // Send message to a channel
-      if (rooms[ws.room])
+      if (rooms[ws.room]) {
         rooms[ws.room].forEach(el => {
           if (el.send && el !== ws) {
             el.send(message);
           }
         });
+      }
     });
 
     ws.on('close', () => {

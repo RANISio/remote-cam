@@ -73,7 +73,6 @@ class Player extends Component {
   };
 
   handle_OnMessage = payload => {
-    console.log(payload);
     const { type, msg } = JSON.parse(payload.data);
     switch (type) {
       case 'joined':
@@ -104,13 +103,9 @@ class Player extends Component {
     this.pc
       .createOffer()
       .then(offer => {
-        console.log(
-          '---> Creating new description object to send to remote peer'
-        );
         return this.pc.setLocalDescription(offer);
       })
       .then(() => {
-        console.log('---> Sending offer to remote peer');
         this.sendMessage({
           type: 'offer',
           msg: this.pc.localDescription
@@ -120,24 +115,18 @@ class Player extends Component {
   };
 
   receiveOffer = msg => {
-    console.log('---> Received offer');
     var desc = new RTCSessionDescription(msg);
     this.pc.setRemoteDescription(desc).catch(error => console.log(error));
     this.sendAnswer();
   };
 
   sendAnswer = () => {
-    console.log('---> Sending Answer');
     this.pc
       .createAnswer()
       .then(answer => {
-        console.log(
-          '---> Creating new description object to send to remote peer'
-        );
         return this.pc.setLocalDescription(answer);
       })
       .then(() => {
-        console.log('---> Sending answer to remote peer');
         this.sendMessage({
           type: 'answer',
           msg: this.pc.localDescription
@@ -147,15 +136,12 @@ class Player extends Component {
   };
 
   recieveAnswer = msg => {
-    console.log('---> Received answer');
     var desc = new RTCSessionDescription(msg);
     this.pc.setRemoteDescription(desc).catch(error => console.log(error));
   };
 
   receiveIceCandidate = msg => {
     var candidate = new RTCIceCandidate(msg);
-
-    console.log('Adding received ICE candidate: ' + JSON.stringify(candidate));
     this.pc.addIceCandidate(candidate).catch(error => console.log(error));
   };
 
@@ -170,7 +156,6 @@ class Player extends Component {
   };
 
   handle_onTrack = e => {
-    console.log('---> Receiveing remote stream.');
     this.player.srcObject = e.streams[0];
   };
 
@@ -199,7 +184,7 @@ class Player extends Component {
 
   getWsUrl = () => {
     var l = window.location;
-    return (l.protocol === 'https:' ? 'wss://' : 'ws://') + l.host + l.pathname;
+    return (l.protocol === 'https:' ? 'wss://' : 'ws://') + `${l.host}?room=${this.room}&role=${this.role}`;
   };
 
   render = () => (
