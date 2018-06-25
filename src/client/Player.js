@@ -61,12 +61,12 @@ class Player extends Component {
           width: { ideal: 1920 },
           height: { ideal: 1080 },
           aspectRatio: 16 / 9,
-          facingMode: { exact: 'environment'},
+          facingMode: 'environment',
           frameRate: { min: 25, max: 60 }
         }
       } else {
         constrains = {
-          facingMode: { exact: 'environment'}
+          facingMode: 'environment'
         };
       }
 
@@ -196,7 +196,8 @@ class Player extends Component {
   closeSession = () => {
     this.pc.onaddstream = null;
     this.pc.onicecandidate = null;
-    this.player.srcObject.getTracks().forEach(track => track.stop());
+    let tracks = this.player.srcObject.getTracks();
+    if(tracks) tracks.forEach(track => track.stop());
 
     this.ws.close();
     this.pc.close();
