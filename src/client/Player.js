@@ -54,15 +54,25 @@ class Player extends Component {
       this.player.muted = true;
       this.player.controls = true;
 
+      let constrains;
+
+      if (navigator.userAgent.match(/Android/i)) {
+        constrains = {
+          width: { ideal: 1920 },
+          height: { ideal: 1080 },
+          aspectRatio: 16 / 9,
+          facingMode: { exact: 'environment'},
+          frameRate: { min: 25, max: 60 }
+        }
+      } else {
+        constrains = {
+          facingMode: { exact: 'environment'}
+        };
+      }
+
       navigator.mediaDevices
         .getUserMedia({
-          video: {
-            width: { min: 640, max: 1920 },
-            height: { min: 480, max: 1080 },
-            aspectRatio: 16 / 9,
-            facingMode: 'environment',
-            frameRate: { min: 25, max: 60 }
-          },
+          video: constrains,
           audio: true
         })
         .then(stream => {
