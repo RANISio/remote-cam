@@ -41,7 +41,13 @@ class Player extends Component {
 
     this.ws.onmessage = this.handle_OnMessage;
     this.pc.onicecandidate = this.handle_onIceCandidate;
-    if (this.role === 'r') this.pc.ontrack = this.handle_onTrack;
+    if (this.role === 'r') {
+      if( this.pc.addTrack ) {
+        this.pc.ontrack = this.handle_onTrack;
+      } else {
+        this.pc.onaddstream = this.handle_onAddStream;
+      }
+    }
     this.ws.onopen = () => this.sendMessage({ type: 'joined' });
 
     if (this.props.role === 's') {
@@ -61,7 +67,11 @@ class Player extends Component {
         })
         .then(stream => {
           this.player.srcObject = stream;
-          stream.getTracks().forEach(track => this.pc.addTrack(track, stream));
+          if(this.pc.adTrack) {
+            stream.getStracks().forEach(track => this.pc.addTrack(track, stream));
+          } else {
+            this.pc.addStream(stream);
+          }
           if (!this.isInitiator) this.sendOffer();
         })
         .catch(e => {
@@ -146,13 +156,16 @@ class Player extends Component {
   };
 
   handle_onIceCandidate = e => {
-    console.log('---> Handling Ice Candidate');
     if (e.candidate) {
       this.sendMessage({
         type: 'icecandidate',
         msg: e.candidate
       });
     }
+  };
+
+  handle_onAddStream = e => {
+    this.player.srcObject = e.stream;
   };
 
   handle_onTrack = e => {

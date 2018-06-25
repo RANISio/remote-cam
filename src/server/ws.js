@@ -39,6 +39,7 @@ export default server => {
       if (rooms[ws.room]) {
         rooms[ws.room].forEach(el => {
           if (el.send && el !== ws) {
+            console.log(JSON.stringify(message));
             el.send(message);
           }
         });
