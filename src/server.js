@@ -49,8 +49,8 @@ export default express()
             : '') +
           css +
           `
-          <script type="application/javascript" src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
-					<script defer type="application/javascript" src="${clientJs}"></script>
+          <script crossorigin src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+					<script defer src="${clientJs}"></script>
 				</head>
 				<body>
 					<div id="root"></div>
