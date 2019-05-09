@@ -59,7 +59,7 @@ export default class App extends Component {
         <Player
           role={this.state.role}
           room={this.state.room}
-          isInitiator={this.state.isisInitiator}
+          isInitiator={this.state.isInitiator}
           actions={this.actions}
         />
       )}
