@@ -41,6 +41,9 @@ class Player extends Component {
 
     this.ws.onmessage = this.handle_OnMessage;
     this.pc.onicecandidate = this.handle_onIceCandidate;
+    this.pc.onnegotiationneeded = e => {
+      if (this.pc.signalingState != "stable") return;
+    }
     if (this.role === 'r') {
       if( this.pc.addTrack ) {
         this.pc.ontrack = this.handle_onTrack;
