@@ -5,50 +5,11 @@
     <link rel="stylesheet" href="/css/style.css">
   </head>
   <body>
-    <video autoplay playsinline />
+    <video autoplay playsinline></video>
     <script crossorigin src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
-    <script>
-      const player = document.querySelector('video');
-      const room = "<%= room %>";
-      const role = "<%= role %>";
-      const isFirst = <%= isFirst %>;
-    </script>
     <script src="/js/index.js"></script>
     <script>
-    var stream;
-    if(role === 's') {
-      player.muted = true;
-      player.controls = true;
-      navigator.mediaDevices
-      .getUserMedia({
-        video: (() => {
-          if (navigator.userAgent.match(/Android/i)) {
-            return {
-              width: { ideal: 1920 },
-              height: { ideal: 1080 },
-              aspectRatio: 16 / 9,
-              facingMode: 'environment',
-              frameRate: { min: 25, max: 60 }
-            }
-          }
-          return {
-            facingMode: 'environment'
-          }
-        })(),
-        audio: true
-      })
-      .then(str => {
-        player.srcObject = stream = str;
-        // !isFirst means Init the call if not the first in the room
-        init(true, !isFirst);
-      })
-      .catch(e => {
-        console.log(e);
-      });
-    } else if(role === 'r') {
-      // !isFirst means Init the call if not the first in the room
-      init(false, !isFirst);
-    }
+      app("<%= room %>", "<%= role %>", <%= isFirst %>)
     </script>
   </body>
 </html>
