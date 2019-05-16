@@ -1,0 +1,36 @@
+events {
+    worker_connections  1024;
+}
+
+http {
+    server {
+        listen       443 ssl;
+        server_name  localhost;
+
+        ssl_certificate /etc/ssl/certs/myssl.crt;
+        ssl_certificate_key /etc/ssl/private/myssl.key;
+
+        ssl_session_cache    shared:SSL:1m;
+        ssl_session_timeout  5m;
+
+        ssl_ciphers  HIGH:!aNULL:!MD5;
+        ssl_prefer_server_ciphers  on;
+
+        location / {
+            proxy_set_header Host $http_host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+	        proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "Upgrade";
+            proxy_pass http://127.0.0.1:3000;
+            proxy_redirect off;
+        }
+
+        location ~ ^/.well-known {
+            allow all;
+        }
+
+        client_max_body_size 50m;
+    }
+}
