@@ -3,7 +3,7 @@ function app(room, role, isFirst) {
   let pc;
 
   const isSender = role === 's';
-  const player = document.querySelector('video');
+  window.player = document.querySelector('video');
   const wss = new WebSocket(`wss://${window.location.host}?room=${room}&role=${role}`);
 
   wss.onmessage = gotMessageFromServer;
@@ -44,6 +44,8 @@ function app(room, role, isFirst) {
     } else {
       initPeerConnection();
       wss.send(JSON.stringify('connected'));
+      // workourund the chrome's limitation when player won't play if muted is not present
+      player.onclick = player.play;
     }
   }
 
@@ -83,7 +85,8 @@ function app(room, role, isFirst) {
     } else if(signal.ice) {
       pc.addIceCandidate(new RTCIceCandidate(signal.ice)).catch(errorHandler);
     } else if(signal === 'disconnect') {
-      resetPc();
+      pc.close();
+      pc = undefined;
     }
   }
 
@@ -107,13 +110,7 @@ function app(room, role, isFirst) {
     console.log(error);
   }
 
-  function resetPc() {
-    pc.close();
-    pc = undefined;
-  }
-
   window.onbeforeunload = () => { 
     wss.send(JSON.stringify('disconnect')); 
-    resetPc(); 
   };
 }
